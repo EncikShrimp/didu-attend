@@ -1,21 +1,22 @@
 "use client";
-import { ReactNode } from "react";
+
+import React, { ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { useRequireAuth } from "@/hooks/useRequireAuth";
+import { useRequireAuth } from "@/context/AuthContext";
 
 interface ProtectedLayoutProps {
   children: ReactNode;
 }
 
 export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
-  const { isAuthenticated } = useRequireAuth();
+  const { user, loading } = useRequireAuth();
   const router = useRouter();
 
-  if (isAuthenticated === null) {
+  if (loading === true) {
     return <div>Loading...</div>;
   }
 
-  if (isAuthenticated === false) {
+  if (user === null) {
     router.push("/sign-in");
     return null;
   }
