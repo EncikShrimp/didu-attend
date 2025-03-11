@@ -9,7 +9,6 @@ interface ProtectedLayoutProps {
 
 export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
   const { isAuthenticated } = useRequireAuth();
-  console.log(isAuthenticated);
   const router = useRouter();
 
   if (isAuthenticated === null) {

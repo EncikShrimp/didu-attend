@@ -28,7 +28,12 @@ export function SignUpForm({
   });
 
   async function onSubmit(data: SignUpInput) {
-    const { error } = await signUp(data.email, data.password);
+    const { error } = await signUp(
+      data.email,
+      data.password,
+      data.firstName,
+      data.lastName
+    );
     if (error) {
       toast({
         title: "Sign Up Error",
@@ -56,6 +61,39 @@ export function SignUpForm({
                   Sign up to get started
                 </p>
               </div>
+              {/* First Name */}
+              <div className="grid gap-2">
+                <Label htmlFor="firstName">First Name</Label>
+                <Input
+                  id="firstName"
+                  type="text"
+                  placeholder="John"
+                  {...register("firstName")}
+                />
+                {errors.firstName && (
+                  <p className="text-red-500 text-xs">
+                    {errors.firstName.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Last Name */}
+              <div className="grid gap-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  placeholder="Doe"
+                  {...register("lastName")}
+                />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs">
+                    {errors.lastName.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Email */}
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -65,9 +103,11 @@ export function SignUpForm({
                   {...register("email")}
                 />
                 {errors.email && (
-                  <p className="text-red-500">{errors.email.message}</p>
+                  <p className="text-red-500 text-xs">{errors.email.message}</p>
                 )}
               </div>
+
+              {/* Password */}
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
@@ -76,12 +116,20 @@ export function SignUpForm({
                   {...register("password")}
                 />
                 {errors.password && (
-                  <p className="text-red-500">{errors.password.message}</p>
+                  <p className="text-red-500 text-xs">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
               <Button type="submit" className="w-full">
                 Sign Up
               </Button>
+              <div className="text-center text-sm">
+                Already have an account?{" "}
+                <a href="/sign-in" className="underline underline-offset-4">
+                  Sign in
+                </a>
+              </div>
             </div>
           </form>
           <div className="relative hidden bg-muted md:block">
