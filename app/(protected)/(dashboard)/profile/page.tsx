@@ -1,7 +1,9 @@
-import React from "react";
+import { ProfileForm } from "@/components/forms/ProfileForm";
 
-function Profile() {
-  return <div>page</div>;
+export default function ProfilePage() {
+  return (
+    <div className="container py-8">
+      <ProfileForm />
+    </div>
+  );
 }
-
-export default Profile;

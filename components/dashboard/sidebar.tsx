@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
 import { NavUser } from "@/components/dashboard/nav-user";
 import {
   Sidebar,
@@ -11,14 +10,6 @@ import {
 } from "@/components/ui/sidebar";
 import { useRequireAuth } from "@/context/AuthContext";
 import { ClassCard } from "./class-card";
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
-import { NavMain } from "./nav-main";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useRequireAuth();
@@ -51,9 +42,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <ClassCard userType="educator" classes={educatorMockData} />
           )}
 
-          {/* {user?.user_metadata?.role === "student" && (
-          )} */}
-          <ClassCard userType="student" classes={studentMockData} />
+          {user?.user_metadata?.role === "student" && (
+            <ClassCard userType="student" classes={studentMockData} />
+          )}
         </div>
       </SidebarContent>
       <SidebarRail />
