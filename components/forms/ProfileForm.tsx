@@ -12,12 +12,11 @@ import {
 import { useAuthContext } from "@/context/AuthContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-
-// shadcn/ui components
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton"; // Make sure this exists
 
 export function ProfileForm({
   className,
@@ -92,6 +91,7 @@ export function ProfileForm({
   async function onSubmitPassword(data: ProfilePasswordInput) {
     if (!user) return;
     try {
+      // Verify current password
       const { error: signInError } = await signIn(
         user.email!,
         data.currentPassword
@@ -120,7 +120,7 @@ export function ProfileForm({
           title: "Password changed",
           description: "Your password has been updated successfully!",
         });
-        resetPassword(); // clear password fields
+        resetPassword();
       }
     } catch (err: any) {
       toast({
@@ -131,10 +131,79 @@ export function ProfileForm({
     }
   }
 
+  // ----------------------------------------
+  // SKELETON LOADING STATE
+  // ----------------------------------------
   if (loading) {
-    return <p>Loading profile...</p>;
+    return (
+      <div className={className} {...props}>
+        {/* Basic Information Skeleton */}
+        <section className="grid items-start gap-8 md:grid-cols-3">
+          {/* LEFT COLUMN: Heading & Description */}
+          <div className="md:col-span-1 space-y-2">
+            <Skeleton className="h-6 w-2/3" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+
+          {/* RIGHT COLUMN: Skeleton Form */}
+          <div className="md:col-span-2">
+            <div className="max-w-lg space-y-4">
+              {/* Each field label + input */}
+              <div>
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div>
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div>
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              {/* Save button */}
+              <Skeleton className="h-10 w-20" />
+            </div>
+          </div>
+        </section>
+
+        <Separator className="my-8" />
+
+        {/* Change Password Skeleton */}
+        <section className="grid items-start gap-8 md:grid-cols-3">
+          {/* LEFT COLUMN: Heading & Description */}
+          <div className="md:col-span-1 space-y-2">
+            <Skeleton className="h-6 w-2/3" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+
+          {/* RIGHT COLUMN: Skeleton Form */}
+          <div className="md:col-span-2">
+            <div className="max-w-lg space-y-4">
+              <div>
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div>
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div>
+                <Skeleton className="h-4 w-1/3 mb-2" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              {/* Save button */}
+              <Skeleton className="h-10 w-20" />
+            </div>
+          </div>
+        </section>
+      </div>
+    );
   }
 
+  // ----------------------------------------
+  // MAIN RENDER IF NOT LOADING
+  // ----------------------------------------
   if (!user) {
     return <p>You must be signed in to view this page.</p>;
   }

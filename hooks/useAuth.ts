@@ -52,5 +52,9 @@ export const useAuth = () => {
     return await supabase.auth.updateUser(updatePayload);
   }
 
-  return { signIn, signUp, updateProfile };
+  async function logout() {
+    return await supabase.auth.signOut();
+  }
+
+  return { signIn, signUp, updateProfile, logout };
 };

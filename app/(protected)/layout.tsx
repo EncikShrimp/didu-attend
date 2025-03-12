@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRequireAuth } from "@/context/AuthContext";
 
@@ -12,12 +12,13 @@ export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
   const { user, loading } = useRequireAuth();
   const router = useRouter();
 
-  if (loading === true) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (!loading && user === null) {
+      router.push("/sign-in");
+    }
+  }, [loading, user, router]);
 
-  if (user === null) {
-    router.push("/sign-in");
+  if (loading || user === null) {
     return null;
   }
 
