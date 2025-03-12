@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/table";
 
 // Import the AddUserModal component
-import { AddUserModal } from "@/components/class/AddUserModal";
+import { AddUserModal } from "@/components/class/add-user-modal";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

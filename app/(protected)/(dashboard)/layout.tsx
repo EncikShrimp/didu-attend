@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
 import { AppSidebar } from "@/components/dashboard/sidebar";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
