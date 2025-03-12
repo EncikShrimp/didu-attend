@@ -6,6 +6,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Button } from "../ui/button";
 
 export function NavUser({
   user,
@@ -22,6 +23,7 @@ export function NavUser({
         <SidebarMenuButton
           size="lg"
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          variant="outline"
         >
           <Avatar className="h-8 w-8 rounded-lg">
             <AvatarImage src={user.avatar} alt={user.name} />

@@ -46,16 +46,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* Only show the class card if the sidebar is expanded */}
-        <div className="p-2 space-y-8">
-          {/* {user?.user_metadata?.role === "educator" && (
+        <div className="p-2 pt-0 space-y-8">
+          {user?.user_metadata?.role === "educator" && (
             <ClassCard userType="educator" classes={educatorMockData} />
           )}
 
-          {user?.user_metadata?.role === "student" && (
-            <ClassCard userType="student" classes={studentMockData} />
+          {/* {user?.user_metadata?.role === "student" && (
           )} */}
+          <ClassCard userType="student" classes={studentMockData} />
         </div>
-        <ClassCard userType="student" classes={studentMockData} />
       </SidebarContent>
       <SidebarRail />
     </Sidebar>

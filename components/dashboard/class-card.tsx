@@ -79,7 +79,7 @@ export function ClassCard({ userType, classes }: ClassListProps) {
   return (
     <>
       {/* The main card */}
-      <Card className="shadow-none m-2">
+      <Card className="shadow-none">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>
             {userType === "educator" ? "Classes Created" : "Classes Enrolled"}
