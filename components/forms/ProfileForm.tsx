@@ -22,7 +22,7 @@ export function ProfileForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { user, loading } = useAuthContext();
+  const { user, loading, profile } = useAuthContext();
   const { toast } = useToast();
   const { updateProfile, signIn } = useAuth();
 
@@ -48,18 +48,18 @@ export function ProfileForm({
 
   // Prefill basic info once user data is loaded
   useEffect(() => {
-    if (user && !loading) {
+    if (profile && !loading) {
       resetBasic({
-        firstName: user.user_metadata?.firstName ?? "",
-        lastName: user.user_metadata?.lastName ?? "",
-        email: user.email ?? "",
+        firstName: profile?.first_name ?? "",
+        lastName: profile?.last_name ?? "",
+        email: profile?.email ?? "",
       });
     }
-  }, [user, loading, resetBasic]);
+  }, [profile, loading, resetBasic]);
 
   // Handle basic info submit
   async function onSubmitBasic(data: ProfileBasicInput) {
-    if (!user) return;
+    if (!profile) return;
     try {
       const { error } = await updateProfile({
         email: data.email,
@@ -89,11 +89,11 @@ export function ProfileForm({
 
   // Handle password submit
   async function onSubmitPassword(data: ProfilePasswordInput) {
-    if (!user) return;
+    if (!profile) return;
     try {
       // Verify current password
       const { error: signInError } = await signIn(
-        user.email!,
+        profile.email!,
         data.currentPassword
       );
       if (signInError) {
@@ -106,7 +106,7 @@ export function ProfileForm({
 
       // Update only the password
       const { error } = await updateProfile({
-        email: user.email || "",
+        email: profile.email || "",
         password: data.newPassword,
       });
       if (error) {

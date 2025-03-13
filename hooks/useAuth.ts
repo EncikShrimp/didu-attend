@@ -1,4 +1,8 @@
 import { supabase } from "@/lib/supabaseClient";
+import {
+  signUpUser,
+  updateAuthUserAndProfile,
+} from "@/lib/services/authService";
 
 type UpdateProfileArgs = {
   email?: string;
@@ -19,13 +23,7 @@ export const useAuth = () => {
     firstName: string,
     lastName: string
   ) {
-    return await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { firstName, lastName },
-      },
-    });
+    return await signUpUser(email, password, firstName, lastName);
   }
 
   async function updateProfile({
@@ -35,21 +33,16 @@ export const useAuth = () => {
     firstName,
     lastName,
   }: UpdateProfileArgs) {
-    const updatePayload: Parameters<typeof supabase.auth.updateUser>[0] = {};
+    // Prepare the data for Auth update (email & password) and Profile update
+    const authUpdates = { email, password };
+    const profileUpdates: Record<string, any> = {
+      ...(username && { username }),
+      ...(firstName && { first_name: firstName }),
+      ...(lastName && { last_name: lastName }),
+      ...(email && { email }), // keep email in sync
+    };
 
-    if (email) updatePayload.email = email;
-    if (password) updatePayload.password = password;
-
-    // Only include metadata if provided
-    if (username || firstName || lastName) {
-      updatePayload.data = {
-        ...(username && { username }),
-        ...(firstName && { firstName }),
-        ...(lastName && { lastName }),
-      };
-    }
-
-    return await supabase.auth.updateUser(updatePayload);
+    return await updateAuthUserAndProfile(authUpdates, profileUpdates);
   }
 
   async function logout() {

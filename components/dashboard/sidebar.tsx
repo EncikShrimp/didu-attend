@@ -12,13 +12,14 @@ import { useRequireAuth } from "@/context/AuthContext";
 import { ClassCard } from "./class-card";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useRequireAuth();
+  const { profile } = useRequireAuth();
 
   const userData = {
-    name: user?.user_metadata.firstName || "shadcn",
-    email: user?.email || "m@example.com",
-    avatar: user?.user_metadata.avatar_url || "/avatars/shadcn.jpg",
+    name: profile?.first_name || "shadcn",
+    email: profile?.email || "m@example.com",
+    avatar: profile?.avatar || "/avatars/shadcn.jpg",
   };
+  const userRole = profile?.role || "student";
 
   const educatorMockData = [
     { id: "C101", name: "Math 101", status: "Active" },
@@ -37,11 +38,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <div className="p-2 pt-0 space-y-8">
-          {user?.user_metadata?.role === "educator" && (
-            <ClassCard userType="educator" classes={educatorMockData} />
+          {userRole === "educator" && (
+            <ClassCard userType="educator" userId={profile?.id || ""} />
           )}
-          {user?.user_metadata?.role === "student" && (
-            <ClassCard userType="student" classes={studentMockData} />
+          {userRole === "student" && (
+            <ClassCard userType="student" userId={profile?.id || ""} />
           )}
         </div>
       </SidebarContent>

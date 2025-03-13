@@ -29,7 +29,7 @@ import { DatePickerWithRange } from "@/components/dashboard/date-picker-range";
 import { AttendanceLog, fetchAttendanceLogs } from "@/lib/fetchAttendanceLogs";
 
 interface AttendanceLogsCardProps {
-  role: "student" | "educator";
+  role: string;
 }
 
 export function AttendanceLogsCard({ role }: AttendanceLogsCardProps) {

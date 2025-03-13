@@ -2,9 +2,7 @@
 
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { format } from "date-fns";
-
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -29,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
-export type Role = "student" | "educator";
+export type Role = string;
 
 // --- Mock fetching for student attendance data ---
 function fetchStudentAttendanceData(
@@ -91,11 +89,11 @@ const studentChartConfig = {
   },
 } satisfies ChartConfig;
 
-interface AttendanceAreaChartProps {
+interface AttendanceBarChartProps {
   role: Role;
 }
 
-export function AttendanceAreaChart({ role }: AttendanceAreaChartProps) {
+export function AttendanceBarChart({ role }: AttendanceBarChartProps) {
   const [timeRange, setTimeRange] = useState("90d");
   const [loading, setLoading] = useState(false);
   const [attendanceData, setAttendanceData] = useState<any[]>([]);
@@ -106,7 +104,7 @@ export function AttendanceAreaChart({ role }: AttendanceAreaChartProps) {
     return 90;
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const days = getDaysFromRange(timeRange);
     setLoading(true);
     if (role === "student") {
@@ -164,13 +162,13 @@ export function AttendanceAreaChart({ role }: AttendanceAreaChartProps) {
       ? Object.keys(attendanceData[0]).filter((key) => key !== "date")
       : [];
 
-  // Define the palette using your specified colors
+  // Define a palette – you can adjust the colors as needed.
   const palette = [
-    "hsl(var(--chart-1))", // chrome
-    "hsl(var(--chart-2))", // safari
-    "hsl(var(--chart-3))", // firefox
-    "hsl(var(--chart-4))", // edge
-    "hsl(var(--chart-5))", // other
+    "hsl(var(--chart-1))",
+    "hsl(var(--chart-2))",
+    "hsl(var(--chart-3))",
+    "hsl(var(--chart-4))",
+    "hsl(var(--chart-5))",
   ];
 
   // For educator, assign colors from the palette (cyclically)
@@ -179,18 +177,11 @@ export function AttendanceAreaChart({ role }: AttendanceAreaChartProps) {
     return {
       key,
       color,
-      gradientId: `fill-${key}`,
     };
   });
 
-  // Build a dynamic educator chart config using these colors
-  const dynamicEducatorChartConfig: ChartConfig = {};
-  educatorSeries.forEach((series) => {
-    dynamicEducatorChartConfig[series.key] = {
-      label: series.key,
-      color: series.color,
-    };
-  });
+  // For student, we use the single "attendance" series
+  const config = role === "student" ? studentChartConfig : {};
 
   return (
     <Card>
@@ -228,42 +219,10 @@ export function AttendanceAreaChart({ role }: AttendanceAreaChartProps) {
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
-          config={
-            role === "student" ? studentChartConfig : dynamicEducatorChartConfig
-          }
+          config={role === "student" ? studentChartConfig : {}}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart data={attendanceData} margin={{ left: 12, right: 12 }}>
-            <defs>
-              {role === "student" ? (
-                <linearGradient id="fillAttendance" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="blue" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="blue" stopOpacity={0.1} />
-                </linearGradient>
-              ) : (
-                educatorSeries.map((series) => (
-                  <linearGradient
-                    key={series.key}
-                    id={series.gradientId}
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop
-                      offset="5%"
-                      stopColor={series.color}
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor={series.color}
-                      stopOpacity={0.1}
-                    />
-                  </linearGradient>
-                ))
-              )}
-            </defs>
+          <BarChart data={attendanceData} margin={{ left: 12, right: 12 }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
@@ -295,25 +254,23 @@ export function AttendanceAreaChart({ role }: AttendanceAreaChartProps) {
               }
             />
             {role === "student" ? (
-              <Area
+              <Bar
                 dataKey="attendance"
-                type="natural"
-                fill="url(#fillAttendance)"
-                stroke="blue"
+                stackId="a"
+                fill={studentChartConfig.attendance.color}
               />
             ) : (
               educatorSeries.map((series) => (
-                <Area
+                <Bar
                   key={series.key}
                   dataKey={series.key}
-                  type="natural"
-                  fill={`url(#${series.gradientId})`}
-                  stroke={series.color}
+                  stackId="a"
+                  fill={series.color}
                 />
               ))
             )}
             <ChartLegend content={<ChartLegendContent />} />
-          </AreaChart>
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>

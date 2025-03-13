@@ -11,9 +11,7 @@ export interface AttendanceLog {
 }
 
 // Mock fetch function that returns different data depending on role
-export function fetchAttendanceLogs(
-  role: "student" | "educator"
-): Promise<AttendanceLog[]> {
+export function fetchAttendanceLogs(role: string): Promise<AttendanceLog[]> {
   return new Promise((resolve) => {
     setTimeout(() => {
       if (role === "student") {
